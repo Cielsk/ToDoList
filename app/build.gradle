@@ -1,0 +1,65 @@
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion 25
+  buildToolsVersion "25.0.2"
+  defaultConfig {
+    def androidDependencies = rootProject.ext.android
+
+    applicationId "com.example.ciels.todolist"
+    minSdkVersion androidDependencies.minSdkVersion
+    targetSdkVersion androidDependencies.targetSdkVersion
+    versionCode androidDependencies.versionCode
+    versionName androidDependencies.versionName
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    jackOptions {
+      enabled true
+    }
+
+    packagingOptions {
+      exclude 'META-INF/rxjava.properties'
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+dependencies {
+  def supportDependencies = rootProject.ext.supportDependencies
+  def testDependencies = rootProject.ext.testDependencies
+  def diDependencies = rootProject.ext.diDependencies
+  def databaseDependencies = rootProject.ext.databaseDependencies
+  def rxDependencies = rootProject.ext.rxDependencies
+
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+
+  compile supportDependencies['appcompat-v7']
+  compile supportDependencies['constraint-layout']
+
+  compile diDependencies.dagger
+  annotationProcessor diDependencies['dagger-compiler']
+  compile diDependencies.butterknife
+  annotationProcessor diDependencies['butterknife-compiler']
+
+  compile rxDependencies.rxjava
+  compile rxDependencies.rxandroid
+
+  compile databaseDependencies.sqlbrite
+
+  testCompile testDependencies.junit4
+
+  androidTestCompile(testDependencies['espresso-core'], {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
+}

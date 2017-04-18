@@ -1,0 +1,72 @@
+project.ext {
+  android = [
+      compileSdkVersion: 25,
+      buildToolsVersion: "25.0.2",
+      minSdkVersion    : 16,
+      targetSdkVersion : 25,
+      versionCode      : 1,
+      versionName      : "1.0"
+  ]
+
+  supportVersion = "25.3.1"
+  rxBindingVersion = "2.0.0"
+  butterKnifeVersion = "8.5.1"
+  daggerVersion = "2.10"
+  rxLifecycleVersion = "2.0.1"
+  retrofit2Version = "2.2.0"
+  espressoVersion = "2.2.2"
+
+  supportDependencies = [
+      "support-v4"      : "com.android.support:support-v4:${supportVersion}",
+      "appcompat-v7"    : "com.android.support:appcompat-v7:${supportVersion}",
+      "design"          : "com.android.support:design:${supportVersion}",
+      "recyclerview"    : "com.android.support:recyclerview-v7:${supportVersion}",
+      "cardview"        : "com.android.support:cardview-v7:${supportVersion}",
+      "constraint-layout": "com.android.support.constraint:constraint-layout:1.0.2",
+  ]
+
+  // dependencies injection
+  diDependencies = [
+      //dagger
+      "dagger"              : "com.google.dagger:dagger:${daggerVersion}",
+      "dagger-compiler"     : "com.google.dagger:dagger-compiler:${daggerVersion}",
+
+      //butter knife
+      "butterknife"         : "com.jakewharton:butterknife:${butterKnifeVersion}",
+      "butterknife-compiler": "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
+  ]
+
+  databaseDependencies = [
+      "sqlbrite": "com.squareup.sqlbrite:sqlbrite:1.1.1",
+  ]
+
+  rxDependencies = [
+      "rxjava"                   : "io.reactivex.rxjava2:rxjava:2.0.8",
+      "rxandroid"                : "io.reactivex.rxjava2:rxandroid:2.0.1",
+      "rxbinding"                : "com.jakewharton.rxbinding2:rxbinding:${rxBindingVersion}",
+      "rxbinding-support-v4"     : "com.jakewharton.rxbinding2:rxbinding-support-v4:${rxBindingVersion}",
+      "rxbinding-appcompat-v7"   : "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${rxBindingVersion}",
+      "rxbinding-design"         : "com.jakewharton.rxbinding2:rxbinding-design:${rxBindingVersion}",
+      "rxbinding-recyclerview-v7": "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:${rxBindingVersion}",
+      "rxlifecycle"              : "com.trello.rxlifecycle2:rxlifecycle:${rxLifecycleVersion}",
+      "rxlifecycle-android"      : "com.trello.rxlifecycle2:rxlifecycle-android:${rxLifecycleVersion}",
+  ]
+
+  networkDependencies = [
+      "okHttp"           : "com.squareup.okhttp3:okhttp:3.7.0",
+      "retrofit2"        : "com.squareup.retrofit2:retrofit:${retrofit2Version}",
+      "retrofit2-rxjava2": "com.squareup.retrofit2:adapter-rxjava2:${retrofit2Version}",
+      "retrofit2-gson"   : "com.squareup.retrofit2:converter-gson:${retrofit2Version}",
+  ]
+
+  testDependencies = [
+      //resolve conflicts
+      "jsr305"      : "com.google.code.findbugs:jsr305:3.0.1",
+
+      //unit test
+      "junit4"      : "junit:junit:4.12",
+
+      //instrumental test
+      "espresso-core": "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+  ]
+}
