@@ -1,16 +1,26 @@
 package com.example.ciels.todolist.data;
 
+import android.support.annotation.NonNull;
+import io.reactivex.Observable;
+import java.util.List;
+
 /**
  *
  */
 
 public interface Repository<T> {
 
-    boolean add(T element);
+    void add(@NonNull T element);
 
-    int addAll(Iterable<T> elements);
+    void remove(@NonNull T element);
 
-    boolean remove(T element);
+    void remove(@NonNull String id);
 
-    boolean update(T element);
+    void clear();
+
+    void update(@NonNull T element);
+
+    Observable<T> getById(@NonNull String id);
+
+    Observable<List<T>> getAll();
 }
