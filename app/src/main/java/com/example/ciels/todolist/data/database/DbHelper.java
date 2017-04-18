@@ -3,6 +3,7 @@ package com.example.ciels.todolist.data.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.example.ciels.todolist.config.TaskDbTableContract;
 import com.example.ciels.todolist.di.ApplicationContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,6 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(TaskDbTableContract.SQL_CREATE_ENTRIES);
     }
 
     @Override
