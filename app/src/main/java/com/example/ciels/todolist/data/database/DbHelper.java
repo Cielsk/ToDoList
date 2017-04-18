@@ -7,8 +7,8 @@ import com.example.ciels.todolist.di.ApplicationContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static com.example.ciels.todolist.DbContract.DB_NAME;
-import static com.example.ciels.todolist.DbContract.DB_VERSION;
+import static com.example.ciels.todolist.config.DbContract.DB_NAME;
+import static com.example.ciels.todolist.config.DbContract.DB_VERSION;
 
 /**
  *

@@ -1,7 +1,7 @@
 package com.example.ciels.todolist.di;
 
 import android.content.Context;
-import com.example.ciels.todolist.ToDoApplication;
+import com.example.ciels.todolist.base.ToDoApplication;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;

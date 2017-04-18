@@ -1,4 +1,4 @@
-package com.example.ciels.todolist;
+package com.example.ciels.todolist.base;
 
 import android.app.Application;
 import android.content.Context;
