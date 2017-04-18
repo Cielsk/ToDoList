@@ -18,7 +18,8 @@ public class ToDoApplication extends Application {
         return (ToDoApplication) context.getApplicationContext();
     }
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         super.onCreate();
 
         mAppComponent = DaggerAppComponent.builder()

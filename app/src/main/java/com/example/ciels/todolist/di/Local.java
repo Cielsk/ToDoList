@@ -7,6 +7,8 @@ import javax.inject.Qualifier;
 /**
  *
  */
-@Qualifier @Retention(RetentionPolicy.RUNTIME) public @interface Local {
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Local {
 
 }

@@ -7,6 +7,8 @@ import javax.inject.Scope;
 /**
  *
  */
-@Scope @Retention(RetentionPolicy.RUNTIME) public @interface FragmentScope {
+@Scope
+@Retention(RetentionPolicy.RUNTIME)
+public @interface FragmentScope {
 
 }

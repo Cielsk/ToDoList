@@ -13,16 +13,20 @@ import static com.example.ciels.todolist.DbContract.DB_VERSION;
 /**
  *
  */
-@Singleton public class DbHelper extends SQLiteOpenHelper {
+@Singleton
+public class DbHelper extends SQLiteOpenHelper {
 
-    @Inject public DbHelper(@ApplicationContext Context context) {
+    @Inject
+    public DbHelper(@ApplicationContext Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    @Override public void onCreate(SQLiteDatabase db) {
+    @Override
+    public void onCreate(SQLiteDatabase db) {
     }
 
-    @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Not required at version 1
     }
 }

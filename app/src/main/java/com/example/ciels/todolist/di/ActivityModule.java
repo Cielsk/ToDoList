@@ -8,7 +8,8 @@ import dagger.Provides;
 /**
  *
  */
-@Module public class ActivityModule {
+@Module
+public class ActivityModule {
 
     private Activity mActivity;
 
@@ -16,11 +17,14 @@ import dagger.Provides;
         mActivity = activity;
     }
 
-    @Provides @ActivityContext Context provideContext() {
+    @Provides
+    @ActivityContext
+    Context provideContext() {
         return mActivity;
     }
 
-    @Provides Activity provideActivity() {
+    @Provides
+    Activity provideActivity() {
         return mActivity;
     }
 }

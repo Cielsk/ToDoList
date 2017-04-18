@@ -9,7 +9,8 @@ import javax.inject.Singleton;
 /**
  *
  */
-@Module public class AppModule {
+@Module
+public class AppModule {
 
     private final Context mContext;
 
@@ -17,11 +18,16 @@ import javax.inject.Singleton;
         mContext = context;
     }
 
-    @Singleton @Provides ToDoApplication provideApplication() {
+    @Singleton
+    @Provides
+    ToDoApplication provideApplication() {
         return (ToDoApplication) mContext.getApplicationContext();
     }
 
-    @ApplicationContext @Singleton @Provides Context provideContext() {
+    @ApplicationContext
+    @Singleton
+    @Provides
+    Context provideContext() {
         return mContext;
     }
 }
