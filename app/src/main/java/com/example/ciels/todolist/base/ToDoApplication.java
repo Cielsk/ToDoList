@@ -2,9 +2,11 @@ package com.example.ciels.todolist.base;
 
 import android.app.Application;
 import android.content.Context;
+import com.example.ciels.todolist.data.task.TasksRepository;
 import com.example.ciels.todolist.di.AppComponent;
 import com.example.ciels.todolist.di.AppModule;
 import com.example.ciels.todolist.di.DaggerAppComponent;
+import javax.inject.Inject;
 
 /**
  *
@@ -13,6 +15,8 @@ import com.example.ciels.todolist.di.DaggerAppComponent;
 public class ToDoApplication extends Application {
 
     protected AppComponent mAppComponent;
+
+    @Inject TasksRepository mTasksRepository;
 
     public static ToDoApplication getInstance(Context context) {
         return (ToDoApplication) context.getApplicationContext();
