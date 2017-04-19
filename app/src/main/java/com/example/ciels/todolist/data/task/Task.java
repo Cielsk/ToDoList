@@ -26,11 +26,7 @@ public final class Task {
      * @param description description of the task
      */
     public Task(@Nullable String title, @Nullable String description) {
-        this(title,
-             description,
-             UUID.randomUUID()
-                 .toString(),
-             false);
+        this(title, description, UUID.randomUUID().toString(), false);
     }
 
     /**
@@ -70,22 +66,21 @@ public final class Task {
      * @param completed true if the task is completed, false if it's active
      */
     public Task(@Nullable String title, @Nullable String description, boolean completed) {
-        this(title,
-             description,
-             UUID.randomUUID()
-                 .toString(),
-             completed);
+        this(title, description, UUID.randomUUID().toString(), completed);
     }
 
-    @NonNull public String getId() {
+    @NonNull
+    public String getId() {
         return mId;
     }
 
-    @Nullable public String getTitle() {
+    @Nullable
+    public String getTitle() {
         return mTitle;
     }
 
-    @Nullable public String getTitleForList() {
+    @Nullable
+    public String getTitleForList() {
         if (!TextUtils.isEmpty(mTitle)) {
             return mTitle;
         } else {
@@ -93,7 +88,8 @@ public final class Task {
         }
     }
 
-    @Nullable public String getDescription() {
+    @Nullable
+    public String getDescription() {
         return mDescription;
     }
 
@@ -109,11 +105,13 @@ public final class Task {
         return TextUtils.isEmpty(mTitle) && TextUtils.isEmpty(mDescription);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return ObjectsUtils.hash(mId, mTitle, mDescription);
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
@@ -122,7 +120,8 @@ public final class Task {
                && ObjectsUtils.equal(mDescription, task.mDescription);
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Task with title " + mTitle;
     }
 }

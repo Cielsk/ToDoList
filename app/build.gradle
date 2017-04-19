@@ -58,6 +58,8 @@ dependencies {
   compile databaseDependencies.sqlbrite
 
   testCompile testDependencies.junit4
+  testCompile testDependencies['mockito-all']
+  testCompile testDependencies['hamcrest-all']
 
   androidTestCompile(testDependencies['espresso-core'], {
     exclude group: 'com.android.support', module: 'support-annotations'
