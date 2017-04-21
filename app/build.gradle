@@ -54,6 +54,7 @@ dependencies {
 
   compile rxDependencies.rxjava
   compile rxDependencies.rxandroid
+  compile rxDependencies['rxjava2-interop']
 
   compile databaseDependencies.sqlbrite
 

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.example.ciels.todolist.di.Local;
 import com.example.ciels.todolist.di.Remote;
+import io.reactivex.Observable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
 
 /**
  *
@@ -33,7 +33,7 @@ public class TasksRepository implements ITasksRepository {
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
      * has package local visibility so it can be accessed from tests.
      */
-    @VisibleForTesting @Nullable boolean mCacheIsDirty = false;
+    @VisibleForTesting boolean mCacheIsDirty = false;
 
     @Inject
     public TasksRepository(@Local ITasksRepository localTasksRepository,
@@ -94,7 +94,7 @@ public class TasksRepository implements ITasksRepository {
     }
 
     @Override
-    public Observable<Task> getById(@NonNull String id) {
+    public Observable<Task> getById(@NonNull final String id) {
         if (mCachedTasks != null) {
             return Observable.just(getTaskWithId(id));
         }
@@ -103,26 +103,25 @@ public class TasksRepository implements ITasksRepository {
 
         Observable<Task> localTask = mLocalTasksRepository
             .getById(id)
-            .doOnNext(task -> mCachedTasks.put(id, task))
-            .first();
+            .doOnNext(task -> mCachedTasks.put(id, task)).firstOrError().toObservable();
 
         Observable<Task> remoteTask = mRemoteTasksRepository.getById(id).doOnNext(task -> {
             mLocalTasksRepository.add(task);
             mCachedTasks.put(task.getId(), task);
         });
 
-        return Observable.concat(localTask, remoteTask).first().map(task -> {
+        return Observable.concat(localTask, remoteTask).firstElement().map(task -> {
             if (task == null) {
                 throw new NoSuchElementException("No task found with taskId " + id);
             }
             return task;
-        });
+        }).toObservable();
     }
 
     @Override
     public Observable<List<Task>> getAll() {
         if (mCachedTasks != null && !mCacheIsDirty) {
-            return Observable.from(mCachedTasks.values()).toList();
+            return Observable.fromIterable(mCachedTasks.values()).toList().toObservable();
         }
 
         if (mCachedTasks == null) {
@@ -130,12 +129,10 @@ public class TasksRepository implements ITasksRepository {
         }
 
         Observable<List<Task>> remoteTasks = mRemoteTasksRepository
-            .getAll()
-            .flatMap(tasks -> Observable.from(tasks).doOnNext(task -> {
+            .getAll().flatMap(tasks -> Observable.fromIterable(tasks).doOnNext(task -> {
                 mCachedTasks.put(task.getId(), task);
                 mLocalTasksRepository.add(task);
-            }).toList())
-            .doOnCompleted(() -> mCacheIsDirty = false);
+            }).toList().toObservable()).doOnComplete(() -> mCacheIsDirty = false);
 
         if (mCacheIsDirty) {
             return remoteTasks;
@@ -143,18 +140,18 @@ public class TasksRepository implements ITasksRepository {
             Observable<List<Task>> localTasks = mLocalTasksRepository
                 .getAll()
                 .flatMap(tasks -> Observable
-                    .from(tasks)
+                    .fromIterable(tasks)
                     .doOnNext(task -> mCachedTasks.put(task.getId(), task))
-                    .toList());
+                    .toList()
+                    .toObservable());
 
             return Observable
                 .concat(localTasks, remoteTasks)
-                .filter(tasks -> !tasks.isEmpty())
-                .first();
+                .filter(tasks -> !tasks.isEmpty()).firstOrError().toObservable();
         }
     }
 
-    private Task getTaskWithId(@NonNull String id) {
+    private Task getTaskWithId(@NonNull final String id) {
         if (mCachedTasks == null || mCachedTasks.isEmpty()) {
             return null;
         } else {

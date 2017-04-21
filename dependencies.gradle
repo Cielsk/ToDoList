@@ -18,11 +18,11 @@ project.ext {
   mockitoVersion = "2.7.22"
 
   supportDependencies = [
-      "support-v4"      : "com.android.support:support-v4:${supportVersion}",
-      "appcompat-v7"    : "com.android.support:appcompat-v7:${supportVersion}",
-      "design"          : "com.android.support:design:${supportVersion}",
-      "recyclerview"    : "com.android.support:recyclerview-v7:${supportVersion}",
-      "cardview"        : "com.android.support:cardview-v7:${supportVersion}",
+      "support-v4"       : "com.android.support:support-v4:${supportVersion}",
+      "appcompat-v7"     : "com.android.support:appcompat-v7:${supportVersion}",
+      "design"           : "com.android.support:design:${supportVersion}",
+      "recyclerview"     : "com.android.support:recyclerview-v7:${supportVersion}",
+      "cardview"         : "com.android.support:cardview-v7:${supportVersion}",
       "constraint-layout": "com.android.support.constraint:constraint-layout:1.0.2",
   ]
 
@@ -51,6 +51,7 @@ project.ext {
       "rxbinding-recyclerview-v7": "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:${rxBindingVersion}",
       "rxlifecycle"              : "com.trello.rxlifecycle2:rxlifecycle:${rxLifecycleVersion}",
       "rxlifecycle-android"      : "com.trello.rxlifecycle2:rxlifecycle-android:${rxLifecycleVersion}",
+      "rxjava2-interop"          : "com.github.akarnokd:rxjava2-interop:0.9.5"
   ]
 
   networkDependencies = [
@@ -62,21 +63,21 @@ project.ext {
 
   testDependencies = [
       //resolve conflicts
-      "jsr305"      : "com.google.code.findbugs:jsr305:3.0.1",
+      "jsr305"         : "com.google.code.findbugs:jsr305:3.0.1",
 
       //unit test
-      "junit4"      : "junit:junit:4.12",
+      "junit4"         : "junit:junit:4.12",
 
       //mockito
-      "mockito-all" : "org.mockito:mockito-all:2.0.2-beta",
-      "mockito-core": "org.mockito:mockito-core:${mockitoVersion}",
+      "mockito-all"    : "org.mockito:mockito-all:2.0.2-beta",
+      "mockito-core"   : "org.mockito:mockito-core:${mockitoVersion}",
       "mockito-android": "org.mockito:mockito-android:${mockitoVersion}",
-      "mockito-inline": "org.mockito:mockito-inline:${mockitoVersion}",
+      "mockito-inline" : "org.mockito:mockito-inline:${mockitoVersion}",
 
       //hamcrest
-      "hamcrest-all": "org.hamcrest:hamcrest-all:1.3",
+      "hamcrest-all"   : "org.hamcrest:hamcrest-all:1.3",
 
       //instrumental test
-      "espresso-core": "com.android.support.test.espresso:espresso-core:${espressoVersion}",
+      "espresso-core"  : "com.android.support.test.espresso:espresso-core:${espressoVersion}",
   ]
 }

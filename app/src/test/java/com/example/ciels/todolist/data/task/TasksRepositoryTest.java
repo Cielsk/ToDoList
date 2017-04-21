@@ -4,6 +4,9 @@ import android.content.Context;
 import com.example.ciels.todolist.data.database.DbHelper;
 import com.example.ciels.todolist.data.task.local.LocalTasksRepository;
 import com.example.ciels.todolist.data.task.remote.RemoteTasksRepository;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,8 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import rx.Observable;
-import rx.observers.TestSubscriber;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
@@ -46,7 +47,7 @@ public class TasksRepositoryTest {
 
     private TasksRepository mTasksRepository;
 
-    private TestSubscriber<List<Task>> mTasksTestSubscriber;
+    private TestObserver<List<Task>> mTasksTestObserver;
 
     @Mock private RemoteTasksRepository mTasksRemoteDataSource;
 
@@ -65,7 +66,7 @@ public class TasksRepositoryTest {
         // Get a reference to the class under test
         mTasksRepository = new TasksRepository(mTasksLocalDataSource, mTasksRemoteDataSource);
 
-        mTasksTestSubscriber = new TestSubscriber<>();
+        mTasksTestObserver = new TestObserver<>();
     }
 
     @Test
@@ -76,19 +77,19 @@ public class TasksRepositoryTest {
         setTasksNotAvailable(mTasksRemoteDataSource);
 
         // When two subscriptions are set
-        TestSubscriber<List<Task>> testSubscriber1 = new TestSubscriber<>();
-        mTasksRepository.getAll().subscribe(testSubscriber1);
+        TestObserver<List<Task>> testObserver1 = new TestObserver<>();
+        mTasksRepository.getAll().subscribe(testObserver1);
 
-        TestSubscriber<List<Task>> testSubscriber2 = new TestSubscriber<>();
-        mTasksRepository.getAll().subscribe(testSubscriber2);
+        TestObserver<List<Task>> testObserver2 = new TestObserver<>();
+        mTasksRepository.getAll().subscribe(testObserver2);
 
         // Then tasks were only requested once from remote and local sources
         verify(mTasksRemoteDataSource).getAll();
         verify(mTasksLocalDataSource).getAll();
 
         assertFalse(mTasksRepository.mCacheIsDirty);
-        testSubscriber1.assertValue(TASKS);
-        testSubscriber2.assertValue(TASKS);
+        testObserver1.assertValue(TASKS);
+        testObserver2.assertValue(TASKS);
     }
 
     private void setTasksNotAvailable(ITasksRepository dataSource) {
@@ -108,18 +109,18 @@ public class TasksRepositoryTest {
         setTasksNotAvailable(mTasksLocalDataSource);
 
         // When two subscriptions are set
-        TestSubscriber<List<Task>> testSubscriber1 = new TestSubscriber<>();
-        mTasksRepository.getAll().subscribe(testSubscriber1);
+        TestObserver<List<Task>> testObserver1 = new TestObserver<>();
+        mTasksRepository.getAll().subscribe(testObserver1);
 
-        TestSubscriber<List<Task>> testSubscriber2 = new TestSubscriber<>();
-        mTasksRepository.getAll().subscribe(testSubscriber2);
+        TestObserver<List<Task>> testObserver2 = new TestObserver<>();
+        mTasksRepository.getAll().subscribe(testObserver2);
 
         // Then tasks were only requested once from remote and local sources
         verify(mTasksRemoteDataSource).getAll();
         verify(mTasksLocalDataSource).getAll();
         assertFalse(mTasksRepository.mCacheIsDirty);
-        testSubscriber1.assertValue(TASKS);
-        testSubscriber2.assertValue(TASKS);
+        testObserver1.assertValue(TASKS);
+        testObserver2.assertValue(TASKS);
     }
 
     @Test
@@ -130,11 +131,11 @@ public class TasksRepositoryTest {
         setTasksNotAvailable(mTasksRemoteDataSource);
 
         // When tasks are requested from the tasks repository
-        mTasksRepository.getAll().subscribe(mTasksTestSubscriber);
+        mTasksRepository.getAll().subscribe(mTasksTestObserver);
 
         // Then tasks are loaded from the local data source
         verify(mTasksLocalDataSource).getAll();
-        mTasksTestSubscriber.assertValue(TASKS);
+        mTasksTestObserver.assertValue(TASKS);
     }
 
     @Test
@@ -224,17 +225,16 @@ public class TasksRepositoryTest {
         setTaskNotAvailable(mTasksRemoteDataSource, task.getId());
 
         // When a task is requested from the tasks repository
-        TestSubscriber<Task> testSubscriber = new TestSubscriber<>();
-        mTasksRepository.getById(task.getId()).subscribe(testSubscriber);
+        TestObserver<Task> testObserver = new TestObserver<>();
+        mTasksRepository.getById(task.getId()).subscribe(testObserver);
 
         // Then the task is loaded from the database
         verify(mTasksLocalDataSource).getById(eq(task.getId()));
-        testSubscriber.assertValue(task);
+        testObserver.assertValue(task);
     }
 
     private void setTaskNotAvailable(ITasksRepository dataSource, String taskId) {
-        when(dataSource.getById(eq(taskId))).thenReturn(Observable.<Task>just(null).concatWith(
-            Observable.never()));
+        when(dataSource.getById(eq(taskId))).thenReturn(Completable.complete().toObservable());
     }
 
     private void setTaskAvailable(ITasksRepository dataSource, Task task) {
@@ -252,14 +252,14 @@ public class TasksRepositoryTest {
         setTaskNotAvailable(mTasksLocalDataSource, task.getId());
 
         // When a task is requested from the tasks repository
-        TestSubscriber<Task> testSubscriber = new TestSubscriber<>();
+        TestObserver<Task> testObserver = new TestObserver<>();
 
-        mTasksRepository.getById(task.getId()).subscribe(testSubscriber);
+        mTasksRepository.getById(task.getId()).subscribe(testObserver);
 
         // Verify no data is returned
-        testSubscriber.assertNoValues();
+        testObserver.assertNoValues();
         // Verify that error is returned
-        testSubscriber.assertError(NoSuchElementException.class);
+        testObserver.assertError(NoSuchElementException.class);
     }
 
     @Test
@@ -329,12 +329,12 @@ public class TasksRepositoryTest {
 
         // When calling getAll in the repository with dirty cache
         mTasksRepository.refreshTasks();
-        mTasksRepository.getAll().subscribe(mTasksTestSubscriber);
+        mTasksRepository.getAll().subscribe(mTasksTestObserver);
 
         // Verify the tasks from the remote data source are returned, not the local
         verify(mTasksLocalDataSource, never()).getAll();
         verify(mTasksRemoteDataSource).getAll();
-        mTasksTestSubscriber.assertValue(TASKS);
+        mTasksTestObserver.assertValue(TASKS);
     }
 
     @Test
@@ -345,11 +345,11 @@ public class TasksRepositoryTest {
         setTasksAvailable(mTasksRemoteDataSource, TASKS);
 
         // When calling getAll in the repository
-        mTasksRepository.getAll().subscribe(mTasksTestSubscriber);
+        mTasksRepository.getAll().subscribe(mTasksTestObserver);
 
         // Verify the tasks from the remote data source are returned
         verify(mTasksRemoteDataSource).getAll();
-        mTasksTestSubscriber.assertValue(TASKS);
+        mTasksTestObserver.assertValue(TASKS);
     }
 
     @Test
@@ -360,12 +360,12 @@ public class TasksRepositoryTest {
         setTasksNotAvailable(mTasksRemoteDataSource);
 
         // When calling getAll in the repository
-        mTasksRepository.getAll().subscribe(mTasksTestSubscriber);
+        mTasksRepository.getAll().subscribe(mTasksTestObserver);
 
         // Verify no data is returned
-        mTasksTestSubscriber.assertNoValues();
+        mTasksTestObserver.assertNoValues();
         // Verify that error is returned
-        mTasksTestSubscriber.assertError(NoSuchElementException.class);
+        mTasksTestObserver.assertError(NoSuchElementException.class);
     }
 
     @Test
@@ -378,11 +378,11 @@ public class TasksRepositoryTest {
         setTaskNotAvailable(mTasksRemoteDataSource, taskId);
 
         // When calling getById in the repository
-        TestSubscriber<Task> testSubscriber = new TestSubscriber<>();
-        mTasksRepository.getById(taskId).subscribe(testSubscriber);
+        TestObserver<Task> testObserver = new TestObserver<>();
+        mTasksRepository.getById(taskId).subscribe(testObserver);
 
         // Verify that error is returned
-        testSubscriber.assertError(NoSuchElementException.class);
+        testObserver.assertError(NoSuchElementException.class);
     }
 
     @Test
@@ -394,10 +394,10 @@ public class TasksRepositoryTest {
         mTasksRepository.refreshTasks();
 
         // When calling getAll in the repository
-        mTasksRepository.getAll().subscribe(mTasksTestSubscriber);
+        mTasksRepository.getAll().subscribe(mTasksTestObserver);
 
         // Verify that the data fetched from the remote data source was saved in local.
         verify(mTasksLocalDataSource, times(TASKS.size())).add(any(Task.class));
-        mTasksTestSubscriber.assertValue(TASKS);
+        mTasksTestObserver.assertValue(TASKS);
     }
 }

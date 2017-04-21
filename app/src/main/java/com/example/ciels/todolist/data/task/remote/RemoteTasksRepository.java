@@ -3,6 +3,7 @@ package com.example.ciels.todolist.data.task.remote;
 import android.support.annotation.NonNull;
 import com.example.ciels.todolist.data.task.ITasksRepository;
 import com.example.ciels.todolist.data.task.Task;
+import io.reactivex.Observable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
 
 /**
  *
@@ -75,9 +75,10 @@ public class RemoteTasksRepository implements ITasksRepository {
     @Override
     public Observable<List<Task>> getAll() {
         return Observable
-            .from(TASKS_SERVICE_DATA.values())
+            .fromIterable(TASKS_SERVICE_DATA.values())
             .delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS)
-            .toList();
+            .toList()
+            .toObservable();
     }
 
     @Override

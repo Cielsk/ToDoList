@@ -11,10 +11,11 @@ import com.example.ciels.todolist.data.task.ITasksRepository;
 import com.example.ciels.todolist.data.task.Task;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Observable;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -116,9 +117,9 @@ public class LocalTasksRepository implements ITasksRepository {
                                    TaskEntry.TABLE_NAME,
                                    TaskEntry.COLUMN_NAME_ENTRY_ID);
 
-        return mDatabase
-            .createQuery(TaskEntry.TABLE_NAME, sql, id)
-            .mapToOneOrDefault(mTaskMapperFunction, null);
+        return RxJavaInterop.toV2Observable(mDatabase
+                                                .createQuery(TaskEntry.TABLE_NAME, sql, id)
+                                                .mapToOneOrDefault(mTaskMapperFunction, null));
     }
 
     @Override
@@ -126,7 +127,10 @@ public class LocalTasksRepository implements ITasksRepository {
         String sql = String.format("SELECT %s FROM %s",
                                    TextUtils.join(",", All_COLUMNS_PROJECTION),
                                    TaskEntry.TABLE_NAME);
-        return mDatabase.createQuery(TaskEntry.TABLE_NAME, sql).mapToList(mTaskMapperFunction);
+
+        return RxJavaInterop.toV2Observable(mDatabase
+                                                .createQuery(TaskEntry.TABLE_NAME, sql)
+                                                .mapToList(mTaskMapperFunction));
     }
 
     @Override
