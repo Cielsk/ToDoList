@@ -63,6 +63,7 @@ dependencies {
   compile rxDependencies['rxjava2-interop']
 
   compile databaseDependencies.sqlbrite
+  compile databaseDependencies['debug-db']
 
   testCompile testDependencies.junit4
   testCompile testDependencies['mockito-all']

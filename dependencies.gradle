@@ -39,6 +39,7 @@ project.ext {
 
   databaseDependencies = [
       "sqlbrite": "com.squareup.sqlbrite:sqlbrite:1.1.1",
+      "debg-db" : "com.amitshekhar.android:debug-db:1.0.0"
   ]
 
   rxDependencies = [
