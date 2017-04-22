@@ -22,7 +22,6 @@ import butterknife.Unbinder;
 import com.example.ciels.todolist.R;
 import com.example.ciels.todolist.addedittask.AddEditTaskActivity;
 import com.example.ciels.todolist.addedittask.AddEditTaskFragment;
-import javax.inject.Inject;
 
 /**
  *
@@ -37,7 +36,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     @BindView(R.id.task_detail_description) TextView mTaskDetailDescription;
     Unbinder unbinder;
 
-    @Inject TaskDetailContract.Presenter mPresenter;
+    private TaskDetailContract.Presenter mPresenter;
 
     public static TaskDetailFragment newInstance(@Nullable String taskId) {
         Bundle arguments = new Bundle();
@@ -147,7 +146,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.taskdetail_frag, container);
+        View view = inflater.inflate(R.layout.taskdetail_frag, container, false);
 
         unbinder = ButterKnife.bind(this, view);
 
