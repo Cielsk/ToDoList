@@ -82,8 +82,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
         mDisposable.clear();
         Disposable disposable = mTasksRepository
-            .getAll()
-            .flatMap(tasks -> Observable.fromIterable(tasks))
+            .getAll().flatMap(Observable::fromIterable)
             .filter(task -> {
                 switch (mCurrentFiltering) {
                     case ACTIVE_TASKS:

@@ -102,8 +102,7 @@ public class TasksRepository implements ITasksRepository {
         mCachedTasks = new LinkedHashMap<>();
 
         Observable<Task> localTask = mLocalTasksRepository
-            .getById(id)
-            .doOnNext(task -> mCachedTasks.put(id, task)).firstOrError().toObservable();
+            .getById(id).doOnNext(task -> mCachedTasks.put(id, task)).firstOrError().toObservable();
 
         Observable<Task> remoteTask = mRemoteTasksRepository.getById(id).doOnNext(task -> {
             mLocalTasksRepository.add(task);
@@ -129,10 +128,12 @@ public class TasksRepository implements ITasksRepository {
         }
 
         Observable<List<Task>> remoteTasks = mRemoteTasksRepository
-            .getAll().flatMap(tasks -> Observable.fromIterable(tasks).doOnNext(task -> {
+            .getAll()
+            .flatMap(tasks -> Observable.fromIterable(tasks).doOnNext(task -> {
                 mCachedTasks.put(task.getId(), task);
                 mLocalTasksRepository.add(task);
-            }).toList().toObservable()).doOnComplete(() -> mCacheIsDirty = false);
+            }).toList().toObservable())
+            .doOnComplete(() -> mCacheIsDirty = false);
 
         if (mCacheIsDirty) {
             return remoteTasks;
@@ -147,7 +148,9 @@ public class TasksRepository implements ITasksRepository {
 
             return Observable
                 .concat(localTasks, remoteTasks)
-                .filter(tasks -> !tasks.isEmpty()).firstOrError().toObservable();
+                .filter(tasks -> !tasks.isEmpty())
+                .firstOrError()
+                .toObservable();
         }
     }
 
