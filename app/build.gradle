@@ -33,7 +33,10 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
-}
+
+  lintOptions {
+    abortOnError false
+} }
 
 dependencies {
   def supportDependencies = rootProject.ext.supportDependencies
@@ -45,7 +48,10 @@ dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
 
   compile supportDependencies['appcompat-v7']
-  compile supportDependencies['constraint-layout']
+  compile supportDependencies['support-v4']
+  compile supportDependencies.design
+  compile supportDependencies.recyclerview
+  compile supportDependencies.cardview
 
   compile diDependencies.dagger
   annotationProcessor diDependencies['dagger-compiler']
@@ -65,4 +71,6 @@ dependencies {
   androidTestCompile(testDependencies['espresso-core'], {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
+  compile 'com.android.support.constraint:constraint-layout:1.0.2'
+  compile 'com.android.support:support-v4:25.3.1'
 }

@@ -5,5 +5,7 @@ package com.example.ciels.todolist.base;
  */
 public interface BasePresenter {
 
-    void start();
+    void subscribe();
+
+    void unsubscribe();
 }
