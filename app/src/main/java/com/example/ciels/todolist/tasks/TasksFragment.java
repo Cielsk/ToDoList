@@ -159,7 +159,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
-
+        mPresenter = presenter;
     }
 
     @Override
